@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <data>
+      <record model="ir.actions.act_window" id="invoice_list_action">
+          <field name="name">Invoices</field>
+          <field name="res_model">account.invoice</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree,form</field>
+          <field eval="False" name="view_id"/>
+          <field name="context">{'type':'out_invoice', 'journal_type': 'sale'}</field>
+          <field name="domain">[('type','in',('out_invoice', 'out_refund'))]</field>
+
+
+          <field name="help" type="html">
+              <p class="oe_view_nocontent_create">Add Invoice
+              </p>
+          </field>
+      </record>
+
+
+      <record id="invoice_tree" model="ir.ui.view">
+          <field name="name">account.invoice.tree</field>
+          <field name="model">account.invoice</field>
+          <field name="arch" type="xml">
+              <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" string="Invoice">
+                  <field name="partner_id" groups="base.group_user" string="Customer"/>
+                  <field name="date_invoice"/>
+                  <field name="number"/>
+                  <field name="commercial_partner_id" invisible="1"/>
+                  <field name="reference" invisible="1"/>
+                  <field name="name" invisible="1"/>
+                  <field name="journal_id" invisible="1"/>
+                  <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                  <field name="user_id"/>
+                  <field name="date_due"/>
+                  <field name="origin"/>
+                  <field name="amount_total_signed" string="Total" sum="Total"/>
+                  <field name="residual_signed" string="Amount Due" sum="Amount Due"/>
+                  <field name="currency_id" invisible="1"/>
+                  <field name="company_currency_id" invisible="1"/>
+                  <field name="state"/>
+                  <field name="type" invisible="context.get('type',True)"/>
+              </tree>
+          </field>
+      </record>
+
+
+
+      <record id="action_invoice_tree1_view1" model="ir.actions.act_window.view">
+          <field eval="1" name="sequence"/>
+          <field name="view_mode">tree</field>
+          <field name="view_id" ref="invoice_tree"/>
+          <field name="act_window_id" ref="invoice_list_action"/>
+      </record>
+
+      <record id="action_invoice_tree1_view2" model="ir.actions.act_window.view">
+          <field eval="2" name="sequence"/>
+          <field name="view_mode">form</field>
+          <field name="view_id" ref="account.invoice_form"/>
+          <field name="context">{'default_team_id':2}</field>
+          <field name="act_window_id" ref="invoice_list_action"/>
+      </record>
+
+
+
+
+
+
+</data>
+</odoo>

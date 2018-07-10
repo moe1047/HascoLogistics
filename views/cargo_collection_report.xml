@@ -1,0 +1,69 @@
+<openerp>
+<data>
+    <report
+        id="logistics_cargo_report"
+        name="kalkaal_logistics.cargo_report"
+        file="kalkaal_logistics.cargo_report"
+        model="report.kalkaal_logistics.cargo_report"
+        string="Cargo Report"
+        report_type="qweb-html"
+        />
+
+    <template id="cargo_report">
+        <t t-call="report.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="report.external_layout">
+                    <div class="page">
+
+
+                        <div class="row">
+
+                        	<div class="col-md-12">
+                                <hr></hr>
+                        				<div class="table-responsive">
+                        					<table class="table table-bordered">
+
+                        						<thead>
+                                          <tr>
+                                              <td><strong>Customer</strong></td>
+                                              <td><strong>Date</strong></td>
+                  							              <td><strong>Item</strong></td>
+                  							              <td><strong>Qty</strong></td>
+                                              <td><strong>UOM</strong></td>
+                                              <td><strong>Repackaged Qty</strong></td>
+                                              <td><strong>Service</strong></td>
+                                          </tr>
+                        						</thead>
+
+                                    <tbody>
+
+                                      <t t-foreach="data" t-as="cargo_line">
+                                          <tr>
+                                              <td><span t-field="cargo_line.cargo_id.customer_id"/></td>
+                                              <td ><span t-field="cargo_line.cargo_id.date_in"/></td>
+                                              <td><span t-field="cargo_line.item_types"/></td>
+                                              <td class="text-right"><span t-field="cargo_line.qty"/></td>
+                                              <td><span t-field="cargo_line.rec_qty_uom"/></td>
+                                              <td class="text-right"><span t-field="cargo_line.repackaged"/></td>
+                                              <td ><span t-field="product_id"/></td>
+                                          </tr>
+                                      </t>
+
+                        						</tbody>
+
+
+                        					</table>
+                        				</div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </t>
+            </t>
+
+        </t>
+    </template>
+
+</data>
+</openerp>

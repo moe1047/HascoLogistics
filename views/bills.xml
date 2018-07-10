@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <data>
+      <record model="ir.ui.view" id="billing_line_search_view">
+          <field name="name">logistics.search</field>
+          <field name="model">logistics.billing_line</field>
+          <field name="arch" type="xml">
+            <search>
+                <field name="description"/>
+                <field name="unit_price"/>
+                <field name="amount"/>
+                <field name="customer"/>
+                <field name="shipment"/>
+            </search>
+          </field>
+      </record>
+      <record model="ir.ui.view" id="billing_line_tree_view">
+          <field name="name">billing.tree</field>
+          <field name="model">logistics.billing_line</field>
+          <field name="arch" type="xml">
+              <tree string="Billing Tree" >
+                  <field name="description"/>
+                  <field name="unit_price"/>
+                  <field name="amount" sum="Total"/>
+                  <field name="customer"/>
+                  <field name="shipment"/>
+              </tree>
+          </field>
+      </record>
+
+
+
+
+
+
+
+
+      <record model="ir.actions.act_window" id="bill_list_action">
+          <field name="name">Service Orders</field>
+          <field name="res_model">logistics.billing</field>
+          <field name="view_type">form</field>
+          <field name="domain">[('invoice_status','=','to_invoice')]</field>
+          <field name="view_mode">tree,form</field>
+      </record>
+
+      <menuitem name="To invoice" id="logistic_services_menu"
+          action="bill_list_action"
+          parent="service_orders_menu" />
+
+
+          <record model="ir.actions.act_window" id="invoiced_bill_list_action">
+              <field name="name">Service Order</field>
+              <field name="res_model">logistics.billing</field>
+              <field name="view_type">form</field>
+              <field name="domain">[('invoice_status','=','invoiced')]</field>
+              <field name="view_mode">tree,form</field>
+          </record>
+
+          <menuitem name="Invoiced" id="logistic_services_menu_invoiced"
+              action="invoiced_bill_list_action"
+              parent="service_orders_menu" />
+  </data>
+  </odoo>

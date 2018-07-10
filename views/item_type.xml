@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <data>
+      <record model="ir.actions.act_window" id="item_type_list_action">
+          <field name="name">Manage Item type</field>
+          <field name="res_model">logistics.item_type</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree,form</field>
+          <field name="help" type="html">
+              <p class="oe_view_nocontent_create">Add Description
+              </p>
+          </field>
+      </record>
+          <menuitem name="Cargo Type Tags" id="descriptions" parent="inputs" action="item_type_list_action"/>
+  </data>
+</odoo>

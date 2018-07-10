@@ -1,0 +1,218 @@
+<openerp>
+<data>
+    <report
+        id="logistics_cargo_report"
+        name="kalkaal_logistics.report_cargo_template"
+        file="kalkaal_logistics.report_cargo_template"
+        model="account.invoice"
+        string="Airway Bill"
+        report_type="qweb-html"
+        attachment_use="True"
+        menu="True"/>
+
+    <report
+        id="logistics_cargo_collection_report"
+        name="kalkaal_logistics.report_cargo_collection_template"
+        file="kalkaal_logistics.report_cargo_collection_template"
+        model="logistics.cargo"
+        string="Carg collection slip"
+        attachment_use="True"
+        report_type="qweb-html"
+        menu="True"/>
+
+    <report
+        id="logistics_shipment_manifest_report"
+        name="kalkaal_logistics.report_shipment_manifest_template"
+        file="kalkaal_logistics.report_shipment_manifest_template"
+        model="logistics.shipment"
+        string="Shipment Manifest"
+        attachment_use="True"
+        report_type="qweb-html"
+        menu="True"/>
+
+
+    <template id="report_cargo_template">
+        <t t-call="report.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="report.external_layout">
+                    <div class="page">
+                        <div class="row">
+                            <div class="col-xs-12">
+                        		<div class="invoice-title">
+                        			<h2 style="display: inline-block">Airway Bill</h2>
+                                    <h3 class="pull-right" style="display: inline-block">Ref # <span t-field="doc.number"/></h3>
+                        		</div>
+                                <hr></hr>
+
+                        		<div class="row">
+                        			<div class="col-xs-6">
+                        				<address>
+
+                                        <strong>Date: </strong><span t-field="doc.date_invoice"/>
+                        				</address>
+                        			</div>
+                                    <div class="col-xs-6 text-right">
+                        				<address>
+                        				<strong>Shipment: </strong><span t-field="doc.shipment_id"/><br></br>
+                                        <strong>Consignee: </strong><span t-field="doc.consignee_id"/>
+                        				</address>
+                        			</div>
+                        		</div>
+
+                        	</div>
+                        </div>
+                        <div class="row">
+                        	<div class="col-md-12">
+                        		<div class="panel panel-default">
+                        			<div class="panel-heading">
+                        				<h3 class="panel-title"><strong>Product List</strong></h3>
+                        			</div>
+                        			<div class="panel-body">
+                        				<div class="table-responsive">
+                        					<table class="table table-condensed">
+                        						<thead>
+                                                    <tr>
+                            							<td><strong>Product</strong></td>
+                            							<td ><strong>Quantity</strong></td>
+                                                        <td><strong>Unit of Measure</strong></td>
+                            							<td><strong>Amount</strong></td>
+
+                                                    </tr>
+                        						</thead>
+                        						<tbody>
+                                                    <t t-foreach="doc.invoice_line_ids" t-as="invoice_line">
+                                                        <tr>
+                                                            <td><span t-field="invoice_line.product_id"/></td>
+                                                            <td class="text-right"><span t-field="invoice_line.quantity"/></td>
+                                                            <td><span t-field="invoice_line.uom_id"/></td>
+                                                            <td class="text-right"><span t-field="invoice_line.price_subtotal"/></td>
+                                                        </tr>
+                                                    </t>
+
+                        						</tbody>
+                        					</table>
+                        				</div>
+                        			</div>
+                        		</div>
+                        	</div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+    <template id="report_cargo_collection_template">
+        <t t-call="report.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="report.external_layout">
+                    <div class="page">
+                        <div class="row">
+                            <div class="col-xs-12">
+                        		<div class="invoice-title">
+                        			<h2 style="display: inline-block">Cargo Collection Bill</h2>
+                                    <h3 class="pull-right" style="display: inline-block">Ref # <span t-field="doc.name"/></h3>
+                        		</div>
+                                <hr></hr>
+
+                        		<div class="row">
+                        			<div class="col-xs-6">
+                        				<address>
+                        				<strong>Reciever: </strong><span t-field="doc.customer_id"/><br></br>
+                                        <strong>Date: </strong><span t-field="doc.date_in"/>
+                        				</address>
+                        			</div>
+                                    <div class="col-xs-6 text-right">
+                        				<address>
+
+                                        <strong>Shipment: </strong><span t-field="doc.shipment_id"/>
+                        				</address>
+                        			</div>
+                        		</div>
+
+                        	</div>
+                        </div>
+                        <div class="row">
+                        	<div class="col-md-12">
+                        		<div class="panel panel-default">
+                        			<div class="panel-heading">
+                        				<h3 class="panel-title"><strong>Product List</strong></h3>
+                        			</div>
+                        			<div class="panel-body">
+                        				<div class="table-responsive">
+                        					<table class="table table-condensed">
+                        						<thead>
+                                                    <tr>
+                            							<td><strong>Description</strong></td>
+                            							<td><strong>Recieved Quantity</strong></td>
+                                                    </tr>
+                        						</thead>
+                        						<tbody>
+                                                    <t t-foreach="doc.cargo_detail_ids" t-as="cargo_detail">
+                                                        <tr>
+                                                            <td><span t-field="cargo_detail.item_type"/></td>
+                                                            <td class="text-right"><span t-field="cargo_detail.qty"/></td>
+                                                        </tr>
+                                                    </t>
+                        						</tbody>
+                        					</table>
+                        				</div>
+                        			</div>
+                        		</div>
+                        	</div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+    <template id="report_shipment_manifest_template">
+        <t t-call="report.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="report.external_layout">
+                    <div class="page">
+                        <div class="row">
+
+                        	<div class="col-md-12">
+                                <h3>Shipment / Container: <span t-field="doc.name"/></h3>
+                                <hr></hr>
+                        				<div class="table-responsive">
+                        					<table class="table table-bordered">
+                        						<thead>
+                                                    <tr>
+                                                        <td><strong>Shipper</strong></td>
+                                                        <td><strong>Consignee</strong></td>
+                                                        <td><strong>Date</strong></td>
+                            							<td><strong>Item</strong></td>
+                            							<td><strong>Qty</strong></td>
+                                                        <td><strong>Inv No.</strong></td>
+                                                        <td><strong>Bill Amount.</strong></td>
+                                                    </tr>
+                        						</thead>
+                                                <tbody>
+                                                    <t t-foreach="doc.invoice_ids" t-as="invoice">
+                                                        <t t-foreach="invoice.invoice_line_ids" t-as="invoice_line">
+                                                            <tr>
+                                                                <td><span t-field="invoice.partner_id"/></td>
+                                                                <td><span t-field="invoice.consignee_id"/></td>
+                                                                <td class="text-right"><span t-field="invoice.date_invoice"/></td>
+                                                                <td><span t-field="invoice_line.product_id"/></td>
+                                                                <td class="text-right"><span t-field="invoice_line.quantity"/></td>
+                                                                <td><span t-field="invoice.number"/></td>
+                                                                <td class="text-right"><span t-field="invoice_line.price_subtotal"/></td>
+                                                            </tr>
+                                                        </t>
+                                                    </t>
+                        						</tbody>
+                        					</table>
+                        				</div>
+                            </div>
+
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</data>
+</openerp>

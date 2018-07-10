@@ -1,0 +1,160 @@
+<openerp>
+<data>
+    <report
+        id="logistics_manifest_report"
+        name="kalkaal_logistics.manifest_report"
+        file="kalkaal_logistics.manifest_report"
+        model="report.kalkaal_logistics.manifest_report"
+        string="Manifest Report"
+        report_type="qweb-html"
+        />
+
+    <template id="manifest_report">
+      <t t-call="report.html_container">
+          <t t-foreach="docs" t-as="doc">
+              <t t-call="report.external_layout">
+                  <div class="page">
+                      <div class="row">
+                        <div class="col-md-12">
+                              <h4>Shipment / Container: <span t-field="doc.shipment_id"/></h4>
+                              <hr/>
+                              <!--<div class="table-responsive">-->
+                                <table class="table table-condensed" style="font-size:12px;">
+
+                                  <thead>
+                                        <tr style="background-color:#ff704d">
+                                            <td class="text-left"><strong>S/N</strong></td>
+                                            <td class="text-left"><strong>Customer</strong></td>
+                                            <td class="text-left"><strong>Date</strong></td>
+                                            <td class="text-left"><strong>Description</strong></td>
+                                            <td class="text-left"><strong>Item</strong></td>
+                                            <td class="text-center"><strong>Qty</strong></td>
+                                            <td class="text-center"><strong>Inv No.</strong></td>
+                                            <td class="text-right"><strong>Bill Amount.</strong></td>
+                                        </tr>
+                                  </thead>
+
+                                  <tbody>
+                                    <t t-set = "customer_id" t-value = "0"/>
+                                    <t t-set = "total" t-value = "0"/>
+
+                                    <t t-foreach="data" t-as="invoice_line">
+
+
+                                        <tr>
+                                            <td><span t-esc="invoice_line_index + 1"/></td>
+                                            <td style="color:blue">
+                                              <t t-if = "customer_id != invoice_line.invoice_id.partner_id.id">
+                                                <span t-field="invoice_line.invoice_id.partner_id"/>
+                                              </t>
+
+                                            </td>
+                                            <td><span t-field="invoice_line.invoice_id.date_invoice"/></td>
+                                            <td><span t-field="invoice_line.name"/></td>
+                                            <td><span t-field="invoice_line.product_id"/></td>
+                                            <td class="text-center"><span t-esc="'{:,.2f}'.format(invoice_line.quantity)"/></td>
+                                            <td class="text-center"><span t-field="invoice_line.invoice_id.number"/></td>
+                                            <td class="text-right"><span t-field="invoice_line.price_subtotal"/></td>
+                                        </tr>
+                                        <t t-set = "customer_id" t-value = "invoice_line.invoice_id.partner_id.id"/>
+                                        <t t-set = "total" t-value = "total + invoice_line.price_subtotal"/>
+                                    </t>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td  class="text-right"><b><span t-esc="total"/></b></td>
+
+                                    </tr>
+
+
+                                  </tbody>
+
+
+
+                                </table>
+                        </div>
+
+                          <!--</div>-->
+
+                      </div>
+                  </div>
+              </t>
+          </t>
+      </t>
+
+    </template>
+    <report
+        id="logistics_manifest_summary_report"
+        name="kalkaal_logistics.manifest_summary_report"
+        file="kalkaal_logistics.manifest_summary_report"
+        model="report.kalkaal_logistics.manifest_summary_report"
+        string="Manifest Report"
+        report_type="qweb-html"
+        />
+
+    <template id="manifest_summary_report">
+      <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="doc">
+
+          <t t-call="report.external_layout">
+                  <div class="page">
+                      <div class="row">
+                        <div class="col-md-12">
+                              <h4>Shipment / Container: <span t-field="doc.shipment_id"/></h4>
+                              <hr/>
+                              <!--<div class="table-responsive">-->
+                                <table class="table table-condensed" style="font-size:12px;">
+
+                                  <thead>
+                                        <tr style="background-color:#ff704d">
+                                            <td class="text-left"><strong>S/N</strong></td>
+                                            <td class="text-left"><strong>Date</strong></td>
+                                            <td class="text-center"><strong>Inv No.</strong></td>
+                                            <td class="text-left"><strong>Customer</strong></td>
+                                            <td class="text-left"><strong>Items</strong></td>
+                                            <td class="text-right"><strong>Bill Amount.</strong></td>
+                                        </tr>
+                                  </thead>
+
+                                  <tbody>
+
+                                      <t t-foreach="data" t-as="invoice_line">
+                                            <tr>
+                                                <td><span t-esc="invoice_line_index + 1"/></td>
+                                                <td><span t-field="doc.date_invoice"/></td>
+                                                <td class="text-center"><span t-field="doc.number"/></td>
+                                                <td style="color:blue"><span t-field="doc.partner_id"/></td>
+                                                <td>
+
+                                                    <span t-field="invoice_line.name"/> (<span t-field="invoice_line.product_id"/>) - <span t-esc="'{:,.2f}'.format(invoice_line.quantity)"/> * <span t-esc="'{:,.2f}'.format(invoice_line.price_unit)"/> = <span t-field="invoice_line.price_subtotal"/><br></br>
+
+                                                </td>
+                                                <td class="text-right"><span t-field="doc.amount_total"/></td>
+                                            </tr>
+                                      </t>
+
+
+
+                                  </tbody>
+
+
+                                </table>
+                              </div>
+
+                          <!--</div>-->
+
+                      </div>
+                  </div>
+          </t>
+        </t>
+      </t>
+    </template>
+
+
+</data>
+</openerp>

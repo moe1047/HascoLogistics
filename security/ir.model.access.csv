@@ -1,0 +1,10 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+access_logistics_cargo_user,kalkaal_logistics.cargo,model_logistics_cargo,,1,1,1,1
+access_logistics_cargo_detail_user,kalkaal_logistics.cargo_detail,model_logistics_cargo_detail,,1,1,1,1
+access_logistics_shipment_manager,kalkaal_logistics.shipment,model_logistics_shipment,,1,1,1,1
+access_logistics_shipment_user,kalkaal_logistics.shipment,model_logistics_shipment,,1,1,1,1
+access_logistics_manifest_report_user,report.kalkaal_logistics.manifest_report,model_report_kalkaal_logistics_manifest_report,,1,1,1,1
+access_logistics_item_type,kalkaal_logistics.item_type,model_logistics_item_type,,1,1,1,1
+access_logistics_billing,kalkaal_logistics.billing,model_logistics_billing,,1,1,1,1
+access_logistics_billing_line,kalkaal_logistics.billing_line,model_logistics_billing_line,,1,1,1,1
+access_logistics_config_settings,kalkaal_logistics.config_settings,model_logistics_config_settings,,1,1,1,1

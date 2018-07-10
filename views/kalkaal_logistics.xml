@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <data>
+
+    <record model="ir.ui.view" id="cargo_form_view">
+        <field name="name">cargo.form</field>
+        <field name="model">logistics.cargo</field>
+        <field name="arch" type="xml">
+            <form string="Cargo Form" >
+                <header>
+                    <button string="Create Service Order" type="object" name="sale_order_create" class="oe_highlight"
+                        attrs="{
+                        'invisible': [('state', '=', 'billed')]}"
+
+                        />
+            	    <!--This will create the statusbar, thanks to the widget. -->
+            	    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="show_related_sale"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-money"
+                            attrs="{
+                            'invisible': [('state', '!=', 'billed')]}"
+                            >
+                            <field name="billing_id" widget="statinfo" string="Create Cargo Bill"/>
+                        </button>
+                    </div>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div> 
+					
+                    <group>
+                        <group>
+                            <field name="shipment_state" invisible="True"/>
+                            <field name="receivable_id" invisible="True"/>
+                            <field name="payable_id" invisible="True"/>
+                            <field name="date_in" attrs="{'readonly': [('shipment_state', '=', 'closed')]}"/>
+                            <field name="memo" attrs="{'readonly': [('shipment_state', '=', 'closed')]}"/>
+                            <field name="shipment_id" attrs="{'readonly': [('shipment_state', '=', 'closed')]}"  widget="selection"/>
+                        </group>
+                        <group>
+                            <field name="customer_id" attrs="{'readonly': [('shipment_state', '=', 'closed')]}" context="{'default_logistic_customer': True,'default_property_account_receivable_id': receivable_id,'default_property_account_payable_id': payable_id}" />
+                            <field name="mark" attrs="{'readonly': [('shipment_state', '=', 'closed')]}"/>
+
+
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="CARGO LIST">
+                            <field name="cargo_detail_ids" widget="one2many_list" attrs="{'readonly': [('shipment_state', '=', 'closed')]}">
+                                <tree string="Detail" editable="bottom">
+                                    <field name="date"/>
+
+                                    <field name="item_types"  options="{'no_quick_create': true, 'no_create_edit': false}" widget="many2many_tags"/>
+                                    <field name="qty"/>
+                                    <field name="rec_qty_uom"  options="{'no_quick_create': true, 'no_create_edit': true}"/>
+                                    <field name="repackaged" />
+                                    <field name="product_id"   options="{'no_quick_create': true, 'no_create_edit': true}"/>
+                                    <field name="memo" />
+
+                                </tree>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                                <field name="total_rec_qty" widget="monetary" />
+                                <field name="total_repackaged_qty" widget="monetary" />
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="billing_form_view">
+        <field name="name">billing.form</field>
+        <field name="model">logistics.billing</field>
+        <field name="arch" type="xml">
+            <form string="Cargo Form" >
+                <header>
+                    <button string="Create Dubai Invoice" type="object" name="invoice_create" class="oe_highlight"
+                        attrs="{
+                        'invisible': [('show_create_invoice', '=', False)]}"
+
+                        />
+                    <button string="Create Muq Invoice" type="object" name="local_invoice_create" class="oe_highlight"
+                        attrs="{
+                        'invisible': [('local_invoices_count', '!=', 0)]}"
+                        />
+
+
+            	    <!--This will create the statusbar, thanks to the widget. -->
+
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="action_view_invoice"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-money"
+                            attrs="{'invisible': [('invoices_count', '=', 0)]}">
+                            <field name="invoices_count" widget="statinfo" string="Invoices"/>
+                        </button>
+                        <button
+                            name="action_view_local_invoice"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-money"
+                            attrs="{
+                            'invisible': [('local_invoices_count', '=', 0)]}">
+                            <field name="local_invoice_id" widget="statinfo" string="Local Invoice"/>
+                        </button>
+                    </div>
+					
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+					
+                    <group>
+                        <group>
+                          <field name="local_invoices_count" invisible="True"/>
+                            <field name="show_create_invoice" invisible="True"/>
+                            <field name="customer_id" />
+                            <field name="mark" />
+                            <field name="shipment_id"   widget="selection"/>
+                            <field name="currency_id" />
+                        </group>
+                        <group>
+                            <field name="date_in" />
+                            <field name="user_id" />
+                            <field name="company_id" />
+                            <field name="invoice_status" invisible="True"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Billing line">
+                            <field name="billing_line_ids" widget="one2many_list" >
+                                <tree string="Detail" editable="bottom" >
+
+                                    <field name="description"/>
+                                    <field name="qty"/>
+                                    <field name="delivered" />
+                                    <field name="invoiced" />
+                                    <field name="unit_price" />
+                                    <field name="amount" />
+                                    <field name="product_id"  widget="selection"/>
+                                    <field name="invoice_status"  widget="selection" invisible="True"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="shipment_form_view">
+        <field name="name">shipment.form</field>
+        <field name="model">logistics.shipment</field>
+        <field name="arch" type="xml">
+            <form string="Cargo Form" >
+                <header>
+                    <button string="Close Shipment" type="object" name="close_shipment"
+                        attrs="{
+                        'invisible': [('state', '!=', 'opened')]}"
+                        />
+            	    <!--This will create the statusbar, thanks to the widget. -->
+            	    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="shipping_type" string="Shipment Type"/>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="account_analytic_id" />
+							<field name="create_uid" readonly="1"/>
+
+                        </group>
+
+                    </group>
+
+                    <notebook>
+                        <page string="Cargos">
+                            <field name="invoice_ids"  readonly="True">
+                                <tree string="Detail">
+                                    <field name="partner_id"/>
+                                    <field name="date_invoice" />
+                                    <field name="amount_total" sum="Total"/>
+                                    <field name="residual" sum="Amount Due"/>
+                                    <field name="state" />
+
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+
+    </record>
+    <record model="ir.ui.view" id="add_field_product_form">
+     <field name="name">add.field.product.form</field>
+     <field name="model">product.template</field>
+     <field name="inherit_id" ref="product.product_template_only_form_view"/>
+     <field name="arch" type="xml">
+         <div name="options" groups="base.group_user" position="inside">
+                         <field name="freight"/>
+                         <label for="freight"/>
+                                         </div>
+     </field>
+    </record>
+    <!-- override the automatically generated list view for cargo -->
+    <record model="ir.ui.view" id="cargo_search_view">
+        <field name="name">logistics.search</field>
+        <field name="model">logistics.cargo</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="customer_id"/>
+                <field name="mark"/>
+                <field name="shipment_id"/>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="billing_tree_view">
+        <field name="name">billing.tree</field>
+        <field name="model">logistics.billing</field>
+        <field name="arch" type="xml">
+            <tree string="Billing Tree" create="false">
+                <field name="name" string="Ref.No"/>
+                <field name="date_in"/>
+                <field name="source"/>
+                <field name="customer_id"/>
+				<field name="mark"/>
+                <field name="shipment_id"/>
+                <field name="invoices_count" string="Dub Invoices"/>
+                <field name="local_invoices_count" string="MUQ Invoices"/>				
+
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="cargo_tree_view">
+        <field name="name">cargo.tree</field>
+        <field name="model">logistics.cargo</field>
+        <field name="arch" type="xml">
+            <tree string="Cargo Tree" default_order='create_date desc'>
+                <field name="name" string="Cargo Ref.No"/>
+                <field name="date_in"/>
+                <field name="customer_id" />
+                <field name="shipment_id"/>
+                <field name="total_rec_qty"  />
+                <field name="total_repackaged_qty" />
+                <field name="write_uid"/>
+                <field name="create_uid"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- override the automatically generated list view for shipment -->
+    <record model="ir.ui.view" id="shipment_tree_view">
+        <field name="name">shipment.tree</field>
+        <field name="model">logistics.shipment</field>
+        <field name="arch" type="xml">
+            <tree string="Course Tree" >
+                <field name="name" readonly="True"/>
+
+                <field name="create_date"  string="Date" readonly="True"/>
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="cargo_list_action">
+        <field name="name">Manage Cargo</field>
+        <field name="res_model">logistics.cargo</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="cargo_search_view"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Add Cargo Transaction
+            </p>
+        </field>
+    </record>
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="billing_list_action">
+        <field name="name">Manage Service Order</field>
+        <field name="res_model">logistics.billing</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Add Service Order
+            </p>
+        </field>
+    </record>
+
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="shipment_list_action">
+        <field name="name">Manage Shipment</field>
+        <field name="res_model">logistics.shipment</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Add Shipment
+            </p>
+        </field>
+    </record>
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="product_list_action">
+        <field name="name">Products</field>
+        <field name="res_model">product.template</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'default_freight': True}</field>
+        <field name="domain">[('freight','=',True)]</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Add Product
+            </p>
+        </field>
+    </record>
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="cargo_graph_action">
+        <field name="name">Manage Cargo</field>
+        <field name="res_model">logistics.cargo</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="cargo_form_view"/>
+        <field name="view_mode">graph</field>
+    </record>
+
+
+
+    <record model="ir.actions.act_window" id="open_board_session">
+          <field name="name">Session Dashboard</field>
+          <field name="res_model">board.board</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">form</field>
+          <field name="usage">menu</field>
+
+        </record>
+
+    <menuitem name="Logistics" id="kalkaal_logistics.menu_root" groups="kalkaal_logistics.group_user" web_icon="kalkaal_logistics,static/description/menu_icon.png"/>
+
+
+
+    <menuitem name="Inputs" id="inputs" parent="kalkaal_logistics.menu_root" sequence="2" groups="kalkaal_logistics.group_user"/>
+    <menuitem name="Logistics Services" id="services" parent="inputs" action="product_list_action" groups="kalkaal_logistics.group_manager"/>
+    <menuitem name="Shipments" id="manage_shipment" parent="inputs" action="shipment_list_action" groups="kalkaal_logistics.group_user"/>
+
+
+    <menuitem name="Transaction" id="transaction" parent="kalkaal_logistics.menu_root" sequence="1" groups="kalkaal_logistics.group_user"/>
+    <menuitem name="Cargo Colection" id="cargo_collection_menu" parent="transaction"  action="cargo_list_action" groups="kalkaal_logistics.group_user"/>
+
+    <menuitem name="Service orders" id="service_orders_menu" parent="kalkaal_logistics.menu_root" sequence="3" groups="kalkaal_logistics.group_user"/>
+
+    <menuitem name="Reports" id="reports_menu" parent="kalkaal_logistics.menu_root" sequence="4" groups="kalkaal_logistics.group_user"/>
+
+    <menuitem name="Configuration" id="configuration" parent="kalkaal_logistics.menu_root" sequence="5" groups="kalkaal_logistics.group_manager"/>
+
+</data>
+</odoo>

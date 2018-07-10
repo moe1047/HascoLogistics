@@ -1,0 +1,119 @@
+<openerp>
+<data>
+  <report
+      id="logistics_invoice"
+      name="kalkaal_logistics.logistics_invoice_template"
+      file="kalkaal_logistics.logistics_invoice_template"
+      model="account.invoice"
+      string="Logistics Invoice"
+      report_type="qweb-html"
+      attachment_use="True"
+      menu="True"/>
+  <template id="logistics_invoice_template">
+    <t t-call="report.html_container">
+          <t t-foreach="docs" t-as="doc">
+
+              <div class="page"  style="font-family: 'Tajawal', sans-serif;">
+                <link href="https://fonts.googleapis.com/css?family=Tajawal" rel="stylesheet"/>
+
+                <style>
+                      .table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr:nth-child(2n+1) > th {
+                      background-color: #ffffff;
+                          }
+                      .table-striped > tbody > tr:nth-child(2n) > td, .table-striped > tbody > tr:nth-child(2n) > th {
+                         background-color: #f2f2f2;
+                          }
+                          .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td {
+                          padding: 8px;
+                          line-height: 1.42857143;
+                          vertical-align: top;
+                          border-top: 0px solid #ddd;
+                      }
+                </style>
+            <div  class="row">
+                <div class="col-md-12" >
+                    <h3><strong>Invoice</strong> | INV1/2018/4563 </h3>
+                </div>
+
+                <div class="col-xs-12" >
+                    <hr style="margin-bottom: 0px;"></hr>
+                </div>
+                <div class="col-xs-3">
+                    <h5><strong>Reference</strong></h5><h5>1148538421</h5>
+                </div>
+                <div class="col-xs-3">
+                    <h5><strong>Invoice Date</strong></h5><h5>25/03/2018</h5>
+                </div>
+                <div class="col-xs-3">
+                    <h5><strong>Due Date</strong></h5><h5>25/03/2018</h5>
+                </div>
+                <div class="col-xs-3">
+                    <h5><strong>TRN</strong></h5>
+                    <h5>100315532000003</h5>
+                </div>
+                <div class="col-xs-12">
+                    <hr style="margin-top: 0px;"></hr>
+                </div>
+
+                    <div class="col-xs-12">
+                      <table class="table table-striped">
+                      <thead>
+                          <tr style="background:-webkit-linear-gradient(right, #f47f20  , #ec135d);color:white;font-weight:bold">
+                            <td><strong>S/N</strong></td>
+                            <td><strong>Desription</strong></td>
+                            <td><strong>Quantity</strong></td>
+                            
+                            <td><strong>Unit Price</strong></td>
+                            <td><strong>VAT</strong></td>
+                            <td><strong>Total</strong></td>
+                          </tr>
+                      </thead>
+                      <tbody>
+
+                            <t t-foreach="doc.invoice_line_ids" t-as="invoice_line">
+                                <tr style="font-weight:bold">
+                                    <td><span t-esc="invoice_line_index + 1"/></td>
+                                    <td><span t-field="invoice_line.name"/></td>
+                                    <td><span t-esc="'{:,.2f}'.format(invoice_line.quantity)"/></td>
+                                    
+                                    <td><span t-esc="'{:,.2f}'.format(invoice_line.price_unit)"/></td>
+                                    <td>
+                                      <t t-foreach="invoice_line.invoice_line_tax_ids" t-as="invoice_line_tax_id">
+                                        <span t-field="invoice_line_tax_id.name"/>
+                                      </t>
+                                    </td>
+                                    <td><span t-field="invoice_line.price_subtotal"/></td>
+                                    
+                                </tr>
+                            </t>
+                      </tbody>
+                      <tfoot>
+                         <tr style="background-color:#e5eaec">
+                            <td/>
+                            <td/>
+                            <td/>
+                            <td><strong>Subtotal</strong></td>
+                            <td/>
+                            <td><span t-field="doc.amount_untaxed"/></td>
+                        </tr>
+                        <tr style="background-color:#9aacb5;color:white;">
+
+                            <td/>
+                            <td/>
+                            <td/>
+                            <td><strong>Total</strong></td>
+                            <td/>
+                            <td><strong><span t-field="doc.amount_total"/></strong></td>
+                        </tr>
+                      </tfoot>
+                    </table>
+					
+                    </div>
+          </div>
+        </div>
+
+          </t>
+      </t>
+  </template>
+</data>
+</openerp>

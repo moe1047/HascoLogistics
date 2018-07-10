@@ -1,0 +1,46 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="item_report_tree_view">
+            <field name="name">cargo.detail.tree</field>
+            <field name="model">logistics.cargo_detail</field>
+            <field name="arch" type="xml">
+                <tree string="Cargo Tree">
+                    <field name="date"/>
+                    <field name="item_types"/>
+                    <field name="qty"/>
+                    <field name="rec_qty_uom"/>
+                    <field name="repackaged"/>
+                    <field name="product_id"/>
+                    <field name="customer"/>
+                    <field name="mark"/>
+                    <field name="memo"/>
+
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="item_report_search_view">
+            <field name="name">cargo.detail.search</field>
+            <field name="model">logistics.cargo_detail</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="item_types"/>
+                    <field name="product_id"/>
+                    <field name="date"/>
+                    <field name="customer"/>
+                    <field name="mark"/>
+
+                    <field name="memo"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="item_report_list_action">
+            <field name="name">Items</field>
+            <field name="res_model">logistics.cargo_detail</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="item_report_tree_view"/>
+            <field name="search_view_id" ref="item_report_search_view"/>
+        </record>
+        
+    </data>
+</odoo>
